@@ -1,6 +1,5 @@
 package io.swagger.configuration;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -10,6 +9,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.Arrays;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-07-22T04:01:22.816Z[GMT]")
@@ -83,6 +83,17 @@ public class SwaggerDocumentationConfig {
         return new ExternalDocumentation()
                 .description(documentationDescription)
                 .url(documentationUrl);
+    }
+
+    @Bean
+    public GroupedOpenApi apiAuthenticationGroup() {
+        String[] paths = {"/authentication/**"};
+        String packagesToScan[] = {"io.swagger.api"};
+        return GroupedOpenApi.builder()
+                .group("authentication")
+                .packagesToScan(packagesToScan)
+                .pathsToMatch(paths)
+                .build();
     }
 
 }
