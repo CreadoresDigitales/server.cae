@@ -1,5 +1,6 @@
 package mx.com.server.cae.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected static final String[] AUTH_WHITELIST = {
         "/", "/csrf", "/swagger/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**", "/configuration/**", "/v3/api-docs/**"
     };
+
+    @Value("${authentication.url}")
+    private String authenticationUrl;
 
     @Bean
     protected BCryptPasswordEncoder passwordEncoder() {
@@ -38,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 // Our public endpoints
-                .antMatchers("/**").permitAll()
+                .antMatchers(authenticationUrl).permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated();
 

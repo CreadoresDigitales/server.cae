@@ -43,7 +43,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         log.info("Method to update user's data: {}", user);
-       return  this.userRepository.save(user);
+        return this.userRepository.save(user);
+    }
+
+    @Override
+    public Boolean existsUserByEmail(String email) {
+        log.info("Method to check an user by email if exists: {}", email);
+        return this.userRepository.existsUserByEmail(email);
     }
 
 }
