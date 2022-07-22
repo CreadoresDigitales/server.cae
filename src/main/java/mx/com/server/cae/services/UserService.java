@@ -16,4 +16,6 @@ public interface UserService {
 
     Boolean existsUserByEmail(String email);
 
+    MyUserPrincipal loginUserByEmail(String email);
+
 }
