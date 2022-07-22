@@ -1,5 +1,6 @@
 package io.swagger.configuration;
 
+import io.swagger.v3.oas.models.Components;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -7,8 +8,10 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.Arrays;
+import mx.com.server.cae.security.constants.CustomSecurityConstants;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -59,6 +62,7 @@ public class SwaggerDocumentationConfig {
         testServer.setUrl("https://example.org");
         OpenAPI openAPI = new OpenAPI();
         openAPI.info(info());
+        openAPI.setComponents(components());
         openAPI.setExternalDocs(externalDocumentation());
         openAPI.setServers(Arrays.asList(localServer, testServer));
         return openAPI;
@@ -83,6 +87,14 @@ public class SwaggerDocumentationConfig {
         return new ExternalDocumentation()
                 .description(documentationDescription)
                 .url(documentationUrl);
+    }
+
+    private Components components() {
+        return new Components()
+                .addSecuritySchemes(CustomSecurityConstants.API_KEY, new SecurityScheme()
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT"));
     }
 
     @Bean
