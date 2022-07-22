@@ -1,0 +1,166 @@
+openapi: 3.0.1
+info:
+  title: server.cae
+  description: Servidor para el proyecto capacitacion a emprendedoras
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: apiteam
+    url: http://www.example.com
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1-SNAPSHOT
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+    description: local
+  - url: https://example.com.mx
+    description: test
+tags:
+- name: authentication
+  description: Operations about authentication
+  externalDocs:
+    description: Find out more about our app
+    url: http://swagger.io
+paths:
+  /authentication/user/login:
+    get:
+      tags:
+      - authentication
+      summary: Logs account into the system
+      description: Gets a valid access token by request.
+      operationId: loginUser
+      parameters:
+      - name: reCAPTCHA
+        in: query
+        description: The reCAPTCHA for login
+        required: true
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: The email for login
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AccessApiKeyResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessApiKeyResponse'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        405:
+          description: Method Not Allowed
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+  /authentication/user/signup:
+    post:
+      tags:
+      - authentication
+      summary: Create an user to save into the system
+      description: To get a valid request.
+        try to enter reCAPTCHA must has valid charaters from google recaptcha.
+        username must has valid charaters.
+        email must has for example example@mail.com,
+        password must has valid charaters.
+        role must has for example ROLE_ADMIN | ROLE_USER | ROLE_GUEST
+      operationId: signupUser
+      requestBody:
+        description: Created an user params definition
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserParams'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/UserParams'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        405:
+          description: Method Not Allowed
+          content: {}
+        500:
+          description: Internal Server Error
+          content: {}
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    UserParams:
+      required:
+      - reCAPTCHA
+      - username
+      - email
+      - password
+      - role
+      type: object
+      properties:
+        reCAPTCHA:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          description: Role Name
+      xml:
+        name: UserParams
+    AccessApiKeyResponse:
+      required:
+      - apiKey
+      type: object
+      properties:
+        apiKey:
+          type: string
+          description: This kind of access api key is needed any time the app calls an API to read, modify or write.
+      xml:
+        name: AccessApiKeyResponse
+  securitySchemes:
+    api_key:        # arbitrary name for the security scheme
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: api_key  # name of the header, query parameter or
