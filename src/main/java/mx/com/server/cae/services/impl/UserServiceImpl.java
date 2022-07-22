@@ -2,7 +2,9 @@ package mx.com.server.cae.services.impl;
 
 import mx.com.server.cae.models.User;
 import mx.com.server.cae.repositories.UserRepository;
+import mx.com.server.cae.services.MyUserPrincipal;
 import mx.com.server.cae.services.UserService;
+import mx.com.server.cae.support.utils.UserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private UserUtil userUtil;
 
     @Autowired
     private UserRepository userRepository;
@@ -50,6 +55,13 @@ public class UserServiceImpl implements UserService {
     public Boolean existsUserByEmail(String email) {
         log.info("Method to check an user by email if exists: {}", email);
         return this.userRepository.existsUserByEmail(email);
+    }
+
+    @Override
+    public MyUserPrincipal loginUserByEmail(String email) {
+        log.info("Method to get user details by email: {}", email);
+        User user = this.userRepository.findUserByEmail(email);
+        return this.userUtil.localUser(user);
     }
 
 }
