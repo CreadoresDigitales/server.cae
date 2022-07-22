@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import mx.com.server.cae.services.UserService;
 import mx.com.server.cae.support.utils.ReCAPTCHAUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-07-22T05:03:21.504Z[GMT]")
 @RestController
@@ -46,17 +45,17 @@ public class AuthenticationApiController implements AuthenticationApi {
 
     private final HttpServletRequest request;
 
+    private final ReCAPTCHAUtil reCAPTCHAUtil;
+
+    private final UserService userService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public AuthenticationApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public AuthenticationApiController(ObjectMapper objectMapper, HttpServletRequest request, ReCAPTCHAUtil reCAPTCHAUtil, UserService userService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.reCAPTCHAUtil = reCAPTCHAUtil;
+        this.userService = userService;
     }
-
-    @Autowired
-    ReCAPTCHAUtil reCAPTCHAUtil;
-
-    @Autowired
-    private UserService userService;
 
     @Override
     public ResponseEntity<AccessApiKeyResponse> loginUser(@NotNull @Parameter(in = ParameterIn.QUERY, description = "The reCAPTCHA for login", required = true, schema = @Schema()) @Valid @RequestParam(value = "reCAPTCHA", required = true) String reCAPTCHA, @NotNull @Parameter(in = ParameterIn.QUERY, description = "The email for login", required = true, schema = @Schema()) @Valid @RequestParam(value = "email", required = true) String email, @NotNull @Parameter(in = ParameterIn.QUERY, description = "The password for login", required = true, schema = @Schema()) @Valid @RequestParam(value = "password", required = true) String password) {
